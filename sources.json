@@ -1,0 +1,120 @@
+{
+  "sources": [
+    {
+      "source_id": "expressen_googlenews",
+      "title": "Expressen Kultur",
+      "type": "google_news_xml",
+      "start_url": "https://www.expressen.se/googlenews",
+      "url_path_prefix": "/kultur/",
+      "max_age_hours": 24
+    },
+    {
+      "source_id": "kunstkritikk_rss",
+      "title": "Kunstkritikk",
+      "type": "rss_xml",
+      "start_url": "https://kunstkritikk.se/feed/",
+      "base_url": "https://kunstkritikk.se/",
+      "max_age_hours": 24
+    },
+    {
+      "source_id": "lu_press",
+      "title": "Lunds universitet",
+      "type": "html_selector_listing",
+      "start_url": "https://www.lu.se/nyheter-och-press/pressreleases",
+      "base_url": "https://www.lu.se/",
+      "item_selector": ".article__listing",
+      "title_selector": ".article__listing__info__title a",
+      "published_selector": ".article__listing__info__date",
+      "published_date_format": "%Y-%m-%d",
+      "max_age_hours": 24
+  },
+  {
+      "source_id": "su_mynewsdesk",
+      "title": "Stockholms universitet",
+      "type": "rss_xml",
+      "start_url": "https://www.mynewsdesk.com/se/rss/current_news/59",
+      "base_url": "https://www.mynewsdesk.com/",
+      "max_age_hours": 24
+  },
+  {
+      "source_id": "uu_press",
+      "title": "Uppsala universitet",
+      "type": "html_selector_listing",
+      "start_url": "https://www.uu.se/press/pressmeddelanden",
+      "base_url": "https://www.uu.se/",
+      "item_selector": ".search-result-hit",
+      "title_selector": ".search-result-hit-title a",
+      "published_selector": "time",
+      "published_attr": "datetime",
+      "published_date_format": "%Y-%m-%dT%H:%M:%SZ",
+      "max_age_hours": 24
+  },
+  {
+      "source_id": "sh_startpage_news",
+      "title": "Södertörns högskola",
+      "type": "html_selector_listing",
+      "start_url": "https://www.sh.se/",
+      "base_url": "https://www.sh.se/",
+      "item_selector": ".sh-news-listing-item",
+      "title_selector": ".sh-news-listing-item__title a",
+      "published_selector": ".sh-news-listing-item__date",
+      "published_date_format": "%Y-%m-%d",
+      "max_age_hours": 24
+  },
+  {
+      "source_id": "konstfack_news",
+      "title": "Konstfack",
+      "type": "html_selector_listing",
+      "start_url": "https://www.konstfack.se/sv/Aktuellt/Nyheter-och-pressmeddelanden/",
+      "base_url": "https://www.konstfack.se/",
+      "item_selector": ".NewsListItem",
+      "title_selector": ".newslink",
+      "published_selector": ".NewsListDate",
+      "published_date_format": "%A %d %B %Y",
+      "published_locale": "sv",
+      "max_age_hours": 24
+  },
+  {
+      "source_id": "svt_kultur_rss",
+      "title": "SVT Kultur",
+      "type": "rss_xml",
+      "start_url": "https://svt.se/kultur/rss.xml",
+      "base_url": "https://svt.se/",
+      "max_age_hours": 24
+  },
+  {
+      "source_id": "sr_kulturnytt_atom",
+      "title": "SR Kulturnytt",
+      "type": "atom_xml",
+      "start_url": "https://api.sr.se/api/rss/program/478",
+      "base_url": "https://www.sverigesradio.se/",
+      "url_lookup_sitemap": "https://www.sverigesradio.se/newssitemap",
+      "url_lookup_fallback": "https://www.sverigesradio.se/kultur",
+      "max_age_hours": 24,
+      "max_items": 4
+  },
+  {
+      "source_id": "svt_nyheter",
+      "title": "SVT Nyheter",
+      "section": "nyheter",
+      "type": "rss_xml",
+      "start_url": "https://www.svt.se/nyheter/rss.xml",
+      "base_url": "https://www.svt.se/",
+      "exclude_url_parts": ["/sport/", "/lokalt/"],
+      "llm_select": true,
+      "max_age_hours": 24,
+      "max_items": 5
+  },
+  {
+      "source_id": "sr_ekot_atom",
+      "title": "SR Ekot",
+      "section": "nyheter",
+      "type": "atom_xml",
+      "start_url": "https://api.sr.se/api/rss/program/83",
+      "base_url": "https://www.sverigesradio.se/",
+      "llm_select": true,
+      "max_age_hours": 24,
+      "max_items": 4
+  }
+]
+}

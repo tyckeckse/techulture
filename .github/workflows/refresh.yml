@@ -1,0 +1,50 @@
+name: Refresh
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Cron is UTC: hourly 05:17-22:17 Swedish winter time, 06:17-23:17 summer time.
+    - cron: "17 4-21 * * *"
+
+# Never let an older run overwrite a newer page.
+concurrency:
+  group: refresh
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python techulture.py --store data/store.json --out index.html --min-source-share 0.5
+      - uses: actions/upload-artifact@v7
+        with:
+          name: techulture-page
+          path: index.html
+          if-no-files-found: error
+          retention-days: 3
+      - name: Deploy to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          for name in VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Missing repository secret: $name"
+              exit 1
+            fi
+          done
+          # Deploy from outside the repo so only the page is uploaded, without git metadata.
+          mkdir "$RUNNER_TEMP/site"
+          cp index.html "$RUNNER_TEMP/site/"
+          cd "$RUNNER_TEMP/site"
+          npx --yes vercel@66.6.0 deploy --prod --yes --token "$VERCEL_TOKEN"
