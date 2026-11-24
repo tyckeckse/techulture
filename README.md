@@ -1,89 +1,32 @@
-# Techulture
+# 🧭 Techulture
 
-Local-first culture and art digest with a small local server and a Windows scheduled refresh.
+A small, self-updating digest of Swedish culture and news, built from public feeds and picked partly by a local language model that runs inside GitHub Actions.
 
-## Setup
+**Live page:** https://techulture.vercel.app · **Presentation with diagrams:** [presentation/index.html](presentation/index.html)
 
-```powershell
-Set-Location "<path-to-techulture>"
-py -m venv .venv
-.\.venv\Scripts\Activate.ps1
-& .\.venv\Scripts\python.exe -m pip install -r .\requirements.txt
+## What it does
+
+Techulture gathers Swedish culture news in one quiet place: culture desks, art criticism and university press rooms, plus a short column of general news. It shows what was published in the last day and updates itself every hour.
+
+Culture stories are all shown, newest first. General news is different: there is far too much of it, so a small AI reads the headlines and keeps only the few that matter most.
+
+## How the page is made
+
+Once an hour, a job on GitHub fetches the latest items from eleven sources, drops what is too old, lets the AI pick the news and writes one simple web page. That page is then published on Vercel. There is no database and no server: each hour the page is built again from scratch.
+
+```
+11 sources  →  keep the last day  →  AI picks the news  →  one web page on Vercel
 ```
 
-## Build now
+If a source is down, it is simply skipped for that hour. And if most sources fail at once, the old page stays up rather than being replaced by an empty one.
 
-```powershell
-& .\.venv\Scripts\python.exe .\techulture.py
-Start-Process .\index.html
-```
+## A small AI that picks the news
 
-## Serve locally
+SVT and SR Ekot publish dozens of headlines a day. The AI gets the fresh ones, about ten at a time, and gives each a score from 0 to 20: low for routine updates, sport and celebrity, high for important or surprising news that many people will want to understand. Only the top five from SVT and the top four from Ekot make it onto the page.
 
-```powershell
-& .\.venv\Scripts\python.exe .\app.py
-```
+The AI is Qwen2.5 3B, a small open model from Hugging Face. It runs right inside the hourly GitHub job, on an ordinary processor, with no API key and no cost, and it only ever sees the headline text. If it fails to start or answer, the page simply shows the newest headlines instead. Qwen2.5 3B is released under a research licence that allows non-commercial use.
 
-Open `http://127.0.0.1:8021/`.
+## Sources
 
-## Install & run all tasks
-
-Recommended one-command setup: refresh task + server task.
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\ops\InstallAndRun-TechultureTasks.ps1
-```
-
-## Remove all tasks
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\ops\Remove-TechultureTasks.ps1
-```
-
-## Install & run refresh task
-
-Defaults: task name `TechultureRefresh`, daily at `05:00`, `12:00`, and `18:00`, plus startup and logon. Mode `SilentVbs`.
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\ops\InstallAndRun-TechultureRefreshTask.ps1
-```
-
-## Remove refresh task
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\ops\Remove-TechultureRefreshTask.ps1
-```
-
-## Install server task
-
-Defaults: task name `TechultureServer`, startup + logon, URL `http://127.0.0.1:8021/`.
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\ops\InstallAndRun-TechultureServerTask.ps1
-```
-
-## Remove server task
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\ops\Remove-TechultureServerTask.ps1
-```
-
-## Debug run with logs
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\ops\Run-TechultureRefresh.ps1
-```
-
-Logs are written to `.\logs\`.
-
-## Published page
-
-GitHub Actions (`.github/workflows/refresh.yml`) builds hourly, 04:17–21:17 UTC, and deploys to https://techulture.vercel.app.
-Requires the repository secrets `VERCEL_TOKEN`, `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID`.
-
-## Architecture
-
-* techulture.py: the builder. It loads sources, fetches articles from the sites, normalizes them, saves data/store.json, then calls render_store_to_file(...) from render_index.py.
-* render_index.py: the renderer. It takes the already-saved store and turns it into index.html.
-* app.py: the web server. It serves the local files over http://127.0.0.1:8021/. It does not fetch or build anything.
-* run_local.py: the convenience wrapper. It runs techulture.py first, then starts app.py.
+**Culture:** SVT Kultur, SR Kulturnytt, Expressen Kultur, Kunstkritikk, Konstfack, and the universities in Stockholm, Uppsala, Lund and Södertörn.
+**News:** SVT Nyheter and SR Ekot, picked by the AI.
