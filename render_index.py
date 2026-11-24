@@ -226,6 +226,9 @@ def render_page(
     /* shared-theme:end */
 
     main {{ max-width: 1120px; margin: 0 auto; padding: 24px 16px 36px; }}
+    .header {{ display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }}
+    .repo-link {{ font-size: 0.9rem; color: var(--muted); }}
+    .repo-link:hover {{ color: var(--accent); }}
     h1 {{ margin: 0 0 6px; font-size: 1.6rem; }}
     h2 {{ margin: 20px 0 10px; }}
     .columns {{
@@ -283,7 +286,10 @@ def render_page(
 </head>
 <body>
   <main>
-    <h1>Techulture</h1>
+    <div class='header'>
+      <h1>Techulture</h1>
+      <a class='repo-link' href='https://github.com/tyckeckse/techulture' target='_blank' rel='noopener noreferrer'>GitHub</a>
+    </div>
     <p class='updated'>Senaste uppdatering: {html.escape(updated)}</p>
     {body}
   </main>
