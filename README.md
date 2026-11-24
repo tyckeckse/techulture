@@ -30,3 +30,7 @@ The AI is Qwen2.5 3B, a small open model from Hugging Face. It runs right inside
 
 **Culture:** SVT Kultur, SR Kulturnytt, Expressen Kultur, Kunstkritikk, Konstfack, and the universities in Stockholm, Uppsala, Lund and Södertörn.
 **News:** SVT Nyheter and SR Ekot, picked by the AI.
+
+---
+
+*The text in this README and on the presentation page is entirely AI-generated.*
