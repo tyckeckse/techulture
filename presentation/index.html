@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Techulture – how it works</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f6f2e9;
+      --panel: #fffdf8;
+      --text: #1d2a2f;
+      --muted: #617076;
+      --line: #d9d0c3;
+      --accent: #1c4f73;
+      --accent-soft: #e3ecf2;
+      --code: #efe8db;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #15191b;
+        --panel: #1d2326;
+        --text: #e6e2da;
+        --muted: #9aa6aa;
+        --line: #33393c;
+        --accent: #8ec1e3;
+        --accent-soft: #23313a;
+        --code: #262c2f;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", -apple-system, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    main { max-width: 820px; margin: 0 auto; padding: 48px 20px 64px; }
+    header p { color: var(--muted); font-size: 1.1rem; margin: 6px 0 0; }
+    h1 { font-size: 2.1rem; margin: 0; letter-spacing: -0.01em; }
+    h2 { font-size: 1.3rem; margin: 48px 0 12px; padding-top: 8px; border-top: 1px solid var(--line); }
+    h3 { font-size: 1.02rem; margin: 22px 0 6px; }
+    a { color: var(--accent); }
+    code {
+      font-family: "Cascadia Code", Consolas, ui-monospace, monospace;
+      font-size: 0.88em;
+      background: var(--code);
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+    .links { display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0 0; }
+    .links a {
+      text-decoration: none;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 0.95rem;
+    }
+    .diagram { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+    .diagram svg { width: 100%; height: auto; display: block; }
+    .diagram .box { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.2; }
+    .diagram .label { fill: var(--text); font-size: 13px; font-weight: 600; }
+    .diagram .sub { fill: var(--muted); font-size: 11px; }
+    .diagram .arrow { stroke: var(--muted); stroke-width: 1.4; fill: none; marker-end: url(#arrowhead); }
+    .diagram .arrowhead { fill: var(--muted); }
+    .diagram .hl { stroke-width: 2; }
+    .diagram .yes { fill: var(--code); }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>🧭 Techulture</h1>
+      <p>A small, self-updating digest of Swedish culture and news, built from public feeds and picked partly by a local language model that runs inside GitHub Actions.</p>
+      <div class="links">
+        <a href="https://techulture.vercel.app">Live page</a>
+      </div>
+    </header>
+
+    <h2>What it does</h2>
+    <p>Techulture gathers Swedish culture news in one quiet place: culture desks, art criticism and university press rooms, plus a short column of general news. It shows what was published in the last day and updates itself every hour.</p>
+    <p>Culture stories are all shown, newest first. General news is different: there is far too much of it, so a small AI reads the headlines and keeps only the few that matter most.</p>
+
+    <h2>How the page is made</h2>
+    <p>Once an hour, a job on GitHub fetches the latest items from eleven sources, drops what is too old, lets the AI pick the news and writes one simple web page. That page is then published on Vercel. There is no database and no server: each hour the page is built again from scratch.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 760 132" role="img" aria-label="Eleven sources are fetched every hour, filtered, the news is picked by a small AI, and one page is published">
+        <defs>
+          <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path class="arrowhead" d="M0,0 L10,5 L0,10 z"/>
+          </marker>
+        </defs>
+        <text class="sub" x="10" y="16">Every hour, during the day</text>
+        <rect class="box" x="10" y="40" width="150" height="80" rx="8"/>
+        <text class="label" x="85" y="72" text-anchor="middle">11 sources</text>
+        <text class="sub" x="85" y="92" text-anchor="middle">SVT, SR, Expressen,</text>
+        <text class="sub" x="85" y="107" text-anchor="middle">universities, art press</text>
+        <rect class="box" x="205" y="40" width="150" height="80" rx="8"/>
+        <text class="label" x="280" y="72" text-anchor="middle">Keep the last day</text>
+        <text class="sub" x="280" y="92" text-anchor="middle">skip sport and</text>
+        <text class="sub" x="280" y="107" text-anchor="middle">local news</text>
+        <rect class="box hl" x="400" y="40" width="150" height="80" rx="8"/>
+        <text class="label" x="475" y="72" text-anchor="middle">🤖 Pick the news</text>
+        <text class="sub" x="475" y="92" text-anchor="middle">a small AI scores</text>
+        <text class="sub" x="475" y="107" text-anchor="middle">the headlines</text>
+        <rect class="box" x="595" y="40" width="155" height="80" rx="8"/>
+        <text class="label" x="672" y="72" text-anchor="middle">One web page</text>
+        <text class="sub" x="672" y="92" text-anchor="middle">published on</text>
+        <text class="sub" x="672" y="107" text-anchor="middle">Vercel</text>
+        <path class="arrow" d="M160,80 L203,80"/>
+        <path class="arrow" d="M355,80 L398,80"/>
+        <path class="arrow" d="M550,80 L593,80"/>
+      </svg>
+    </div>
+    <p>If a source is down, it is simply skipped for that hour. And if most sources fail at once, the old page stays up rather than being replaced by an empty one.</p>
+
+    <h2>A small AI that picks the news</h2>
+    <p>SVT and SR Ekot publish dozens of headlines a day. The AI gets the fresh ones, about ten at a time, and gives each a score from 0 to 20: low for routine updates, sport and celebrity, high for important or surprising news that many people will want to understand. Only the top five from SVT and the top four from Ekot make it onto the page.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 760 200" role="img" aria-label="Headlines get scores from the AI and only the highest scored are shown">
+        <rect class="box" x="10" y="20" width="300" height="160" rx="8"/>
+        <text class="label" x="26" y="46">Fresh headlines</text>
+        <text class="sub" x="26" y="72">Riksbank official suspended after Ekot report</text>
+        <text class="sub" x="26" y="94">Break-in at a royal holiday home</text>
+        <text class="sub" x="26" y="116">Party leader open to being tested as PM</text>
+        <text class="sub" x="26" y="138">Football transfer rumour</text>
+        <text class="sub" x="26" y="160">… and about 25 more</text>
+        <rect class="box hl" x="350" y="65" width="130" height="70" rx="10"/>
+        <text class="label" x="415" y="95" text-anchor="middle">🤖 Score</text>
+        <text class="sub" x="415" y="115" text-anchor="middle">0 to 20 each</text>
+        <rect class="box yes" x="520" y="20" width="230" height="90" rx="8"/>
+        <text class="label" x="536" y="46">On the page</text>
+        <text class="sub" x="536" y="70">18  Riksbank official suspended</text>
+        <text class="sub" x="536" y="92">8  Party leader open to PM test</text>
+        <rect class="box" x="520" y="125" width="230" height="55" rx="8"/>
+        <text class="label" x="536" y="149">Left out</text>
+        <text class="sub" x="536" y="169">2  Break-in · 1  Football rumour</text>
+        <path class="arrow" d="M310,100 L348,100"/>
+        <path class="arrow" d="M480,90 L518,68"/>
+        <path class="arrow" d="M480,112 L518,150"/>
+      </svg>
+    </div>
+    <p>The AI is Qwen2.5 3B, a small open model from Hugging Face. It runs right inside the hourly GitHub job, on an ordinary processor, with no API key and no cost, and it only ever sees the headline text. If it fails to start or answer, the page simply shows the newest headlines instead. Qwen2.5 3B is released under a research licence that allows non-commercial use.</p>
+
+    <h2>Sources</h2>
+    <p><strong>Culture:</strong> SVT Kultur, SR Kulturnytt, Expressen Kultur, Kunstkritikk, Konstfack, and the universities in Stockholm, Uppsala, Lund and Södertörn.<br>
+    <strong>News:</strong> SVT Nyheter and SR Ekot, picked by the AI.</p>
+  </main>
+</body>
+</html>
