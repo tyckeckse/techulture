@@ -437,12 +437,12 @@ def select_with_llm(source: dict[str, Any], items: list[Item], max_items: int | 
     for start in range(0, len(candidates), SCORE_BATCH_SIZE):
         batch = candidates[start:start + SCORE_BATCH_SIZE]
         try:
-            result = llm.call_ollama(build_scoring_prompt(batch))
+            response_text = llm.call_llm(build_scoring_prompt(batch))
         except Exception as error:
-            # Ollama down or slow: fall back to the newest items.
+            # Model down or slow: fall back to the newest items.
             print(f"{source['source_id']}: llm scoring skipped: {error}", file=sys.stderr)
             return limit_newest(candidates, max_items)
-        scores = parse_scores(str(result.get("response", "")))
+        scores = parse_scores(response_text)
         scored.extend((scores.get(index, 0.0), item) for index, item in enumerate(batch, start=1))
 
     scored.sort(key=lambda pair: pair[0], reverse=True)

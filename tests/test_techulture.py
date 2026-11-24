@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+
 from datetime import datetime, timedelta, timezone
 
 import pytest
@@ -245,24 +247,20 @@ def test_select_with_llm_keeps_highest_scored_fresh_items(monkeypatch) -> None:
         make_item("Gammal", hours_ago=48),
         make_item("B", hours_ago=2),
     ]
-    monkeypatch.setattr(
-        techulture.llm,
-        "call_ollama",
-        lambda prompt, **kwargs: {"response": "1. 2\n2. 15\n3. 9"},
-    )
+    monkeypatch.setattr(techulture.llm, "call_llm", lambda prompt, **kwargs: "1. 2\n2. 15\n3. 9")
 
     selected = techulture.select_with_llm({"source_id": "svt_nyheter"}, items, max_items=2)
 
     assert [item.title for item in selected] == ["B", "C"]
 
 
-def test_select_with_llm_falls_back_to_newest_when_ollama_fails(monkeypatch) -> None:
+def test_select_with_llm_falls_back_to_newest_when_model_fails(monkeypatch) -> None:
     items = [make_item("Äldre", hours_ago=5), make_item("Nyast", hours_ago=1), make_item("Mitten", hours_ago=3)]
 
     def fail(prompt, **kwargs):
-        raise ConnectionError("ollama down")
+        raise ConnectionError("model down")
 
-    monkeypatch.setattr(techulture.llm, "call_ollama", fail)
+    monkeypatch.setattr(techulture.llm, "call_llm", fail)
 
     selected = techulture.select_with_llm({"source_id": "svt_nyheter"}, items, max_items=2)
 
@@ -368,3 +366,27 @@ def test_main_min_source_share_protects_existing_page(tmp_path, monkeypatch, sha
 
     assert techulture.main() == expected_code
     assert (out_path.read_text(encoding="utf-8") == "old page") == bool(expected_code)
+
+
+def test_call_llm_reads_chat_completion(monkeypatch) -> None:
+    sent = {}
+
+    class FakeResponse:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def read(self):
+            return b'{"choices": [{"message": {"content": "1. 7"}}]}'
+
+    def fake_urlopen(request, timeout):
+        sent["body"] = json.loads(request.data)
+        return FakeResponse()
+
+    monkeypatch.setattr(techulture.llm.urllib.request, "urlopen", fake_urlopen)
+
+    assert techulture.llm.call_llm("Score this") == "1. 7"
+    assert sent["body"]["messages"] == [{"role": "user", "content": "Score this"}]
+    assert sent["body"]["temperature"] == 0
