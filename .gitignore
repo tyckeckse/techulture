@@ -2,5 +2,5 @@
 *.pyc
 settings.local.json
 
-data/
-index.html
+/data/
+/index.html
