@@ -1,5 +1,7 @@
 # 🧭 Techulture
 
+*The majority of text in this README was AI-generated.*
+
 A small, self-updating digest of Swedish culture and news, built from public feeds and picked partly by a local language model that runs inside GitHub Actions.
 
 **Live page:** https://techulture.vercel.app · **Presentation with diagrams:** [presentation/index.html](presentation/index.html)
