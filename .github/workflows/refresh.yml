@@ -2,6 +2,11 @@ name: Refresh
 
 on:
   workflow_dispatch:
+    inputs:
+      deploy:
+        description: Publish the page (off for test runs)
+        type: boolean
+        default: true
   schedule:
     # Cron is UTC: hourly 05:17-22:17 Swedish winter time, 06:17-23:17 summer time.
     - cron: "17 4-21 * * *"
@@ -16,7 +21,12 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
+    env:
+      # Pinned so a new release can't change behaviour unnoticed.
+      LLAMA_CPP: b12676
+      LLM_MODEL: Qwen/Qwen2.5-3B-Instruct-GGUF:Q4_K_M
+      LLAMA_CACHE: ${{ github.workspace }}/.llama-cache
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -24,6 +34,27 @@ jobs:
           python-version: "3.14"
           cache: pip
       - run: pip install -r requirements.txt
+      - uses: actions/cache@v6
+        with:
+          path: .llama-cache
+          key: llm-${{ env.LLM_MODEL }}
+      - name: Start local model
+        # Never fails the run: without a model, techulture.py picks the newest headlines.
+        continue-on-error: true
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/llama.tar.gz" \
+            "https://github.com/ggml-org/llama.cpp/releases/download/$LLAMA_CPP/llama-$LLAMA_CPP-bin-ubuntu-x64.tar.gz"
+          tar -xzf "$RUNNER_TEMP/llama.tar.gz" -C "$RUNNER_TEMP"
+          bin="$RUNNER_TEMP/llama-$LLAMA_CPP"
+          LD_LIBRARY_PATH="$bin" nohup "$bin/llama-server" -hf "$LLM_MODEL" --host 127.0.0.1 --port 8080 \
+            -c 4096 -t "$(nproc)" > "$RUNNER_TEMP/llama.log" 2>&1 &
+          for second in $(seq 1 300); do
+            curl -sf http://127.0.0.1:8080/health > /dev/null && { echo "Model ready after ${second}s"; exit 0; }
+            sleep 1
+          done
+          tail -n 30 "$RUNNER_TEMP/llama.log"
+          echo "::warning::Model did not start; using newest headlines"
+          exit 1
       - run: python techulture.py --store data/store.json --out index.html --min-source-share 0.5
       - uses: actions/upload-artifact@v7
         with:
@@ -32,6 +63,7 @@ jobs:
           if-no-files-found: error
           retention-days: 3
       - name: Deploy to Vercel
+        if: github.event_name != 'workflow_dispatch' || inputs.deploy
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
