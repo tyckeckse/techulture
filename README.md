@@ -1,29 +1,14 @@
 # 🧭 Techulture
 
-*The majority of text in this README was AI-generated.*
+**Live:** https://techulture.vercel.app · **Presentation:** [presentation/index.html](presentation/index.html)
 
-A small, self-updating digest of Swedish culture and news, built from public feeds and picked partly by a local language model that runs inside GitHub Actions.
+Nyhetsaggregat från svenska nyhets- och kultursidor, med en LLM som rangordnar nyheterna efter intressevärde.
 
-**Live page:** https://techulture.vercel.app · **Presentation with diagrams:** [presentation/index.html](presentation/index.html)
+![Elva källor hämtas varje timme, filtreras, en liten AI väljer nyheterna och en sida publiceras](presentation/how-it-works.svg)
 
-## What it does
+![Rubrikerna får poäng av AI:n och bara de högst rankade visas](presentation/picking-the-news.svg)
 
-Techulture gathers Swedish culture news in one quiet place: culture desks, art criticism and university press rooms, plus a short column of general news. 
+## Källor
 
-Once an hour, a job on GitHub fetches the latest items from eleven sources, drops what is too old, lets the AI pick the news and writes one simple web page.
-
-![Eleven sources are fetched every hour, filtered, the news is picked by a small AI, and one page is published](presentation/how-it-works.svg)
-
-
-## A small AI that picks the news
-
-
-![Headlines get scores from the AI and only the highest scored are shown](presentation/picking-the-news.svg)
-
-The AI is Qwen2.5 3B, a small open model from Hugging Face. 
-
-## Sources
-
-**Culture:** SVT Kultur, SR Kulturnytt, Expressen Kultur, Kunstkritikk, Konstfack, and the universities in Stockholm, Uppsala, Lund and Södertörn.
-**News:** SVT Nyheter and SR Ekot, picked by the AI.
-
+**Kultur:** SVT Kultur, SR Kulturnytt, Expressen Kultur, Kunstkritikk, Konstfack samt universiteten i Stockholm, Uppsala, Lund och Södertörn.
+**Nyheter:** SVT Nyheter och SR Ekot, rangordnade av AI:n.
