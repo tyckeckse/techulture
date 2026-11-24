@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-16 -16 792 232" width="792" height="232" role="img" aria-label="Headlines get scores from the AI and only the highest scored are shown">
+  <style>
+    .bg { fill: #fffdf8; stroke: #d9d0c3; }
+    .box { fill: #e3ecf2; stroke: #1c4f73; stroke-width: 1.2; }
+    .hl { stroke-width: 2; }
+    .yes { fill: #efe8db; }
+    .label { fill: #1d2a2f; font: 600 13px "Segoe UI", -apple-system, system-ui, sans-serif; }
+    .sub { fill: #617076; font: 11px "Segoe UI", -apple-system, system-ui, sans-serif; }
+    .arrow { stroke: #617076; stroke-width: 1.4; fill: none; marker-end: url(#arrowhead); }
+    .arrowhead { fill: #617076; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #1d2326; stroke: #33393c; }
+      .box { fill: #23313a; stroke: #8ec1e3; }
+      .yes { fill: #262c2f; }
+      .label { fill: #e6e2da; }
+      .sub, .arrowhead { fill: #9aa6aa; }
+      .arrow { stroke: #9aa6aa; }
+    }
+  </style>
+  <defs>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path class="arrowhead" d="M0,0 L10,5 L0,10 z"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="-15.5" y="-15.5" width="791" height="231" rx="10"/>
+  <rect class="box" x="10" y="20" width="300" height="160" rx="8"/>
+  <text class="label" x="26" y="46">Fresh headlines</text>
+  <text class="sub" x="26" y="72">Riksbank official suspended after Ekot report</text>
+  <text class="sub" x="26" y="94">Break-in at a royal holiday home</text>
+  <text class="sub" x="26" y="116">Party leader open to being tested as PM</text>
+  <text class="sub" x="26" y="138">Football transfer rumour</text>
+  <text class="sub" x="26" y="160">… and about 25 more</text>
+  <rect class="box hl" x="350" y="65" width="130" height="70" rx="10"/>
+  <text class="label" x="415" y="95" text-anchor="middle">🤖 Score</text>
+  <text class="sub" x="415" y="115" text-anchor="middle">0 to 20 each</text>
+  <rect class="box yes" x="520" y="20" width="230" height="90" rx="8"/>
+  <text class="label" x="536" y="46">On the page</text>
+  <text class="sub" x="536" y="70">18  Riksbank official suspended</text>
+  <text class="sub" x="536" y="92">8  Party leader open to PM test</text>
+  <rect class="box" x="520" y="125" width="230" height="55" rx="8"/>
+  <text class="label" x="536" y="149">Left out</text>
+  <text class="sub" x="536" y="169">2  Break-in · 1  Football rumour</text>
+  <path class="arrow" d="M310,100 L348,100"/>
+  <path class="arrow" d="M480,90 L518,68"/>
+  <path class="arrow" d="M480,112 L518,150"/>
+</svg>

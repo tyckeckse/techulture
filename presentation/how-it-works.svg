@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-16 -16 792 164" width="792" height="164" role="img" aria-label="Eleven sources are fetched every hour, filtered, the news is picked by a small AI, and one page is published">
+  <style>
+    .bg { fill: #fffdf8; stroke: #d9d0c3; }
+    .box { fill: #e3ecf2; stroke: #1c4f73; stroke-width: 1.2; }
+    .hl { stroke-width: 2; }
+    .yes { fill: #efe8db; }
+    .label { fill: #1d2a2f; font: 600 13px "Segoe UI", -apple-system, system-ui, sans-serif; }
+    .sub { fill: #617076; font: 11px "Segoe UI", -apple-system, system-ui, sans-serif; }
+    .arrow { stroke: #617076; stroke-width: 1.4; fill: none; marker-end: url(#arrowhead); }
+    .arrowhead { fill: #617076; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #1d2326; stroke: #33393c; }
+      .box { fill: #23313a; stroke: #8ec1e3; }
+      .yes { fill: #262c2f; }
+      .label { fill: #e6e2da; }
+      .sub, .arrowhead { fill: #9aa6aa; }
+      .arrow { stroke: #9aa6aa; }
+    }
+  </style>
+  <defs>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path class="arrowhead" d="M0,0 L10,5 L0,10 z"/>
+    </marker>
+  </defs>
+  <rect class="bg" x="-15.5" y="-15.5" width="791" height="163" rx="10"/>
+  <text class="sub" x="10" y="16">Every hour, during the day</text>
+  <rect class="box" x="10" y="40" width="150" height="80" rx="8"/>
+  <text class="label" x="85" y="72" text-anchor="middle">11 sources</text>
+  <text class="sub" x="85" y="92" text-anchor="middle">SVT, SR, Expressen,</text>
+  <text class="sub" x="85" y="107" text-anchor="middle">universities, art press</text>
+  <rect class="box" x="205" y="40" width="150" height="80" rx="8"/>
+  <text class="label" x="280" y="72" text-anchor="middle">Keep the last day</text>
+  <text class="sub" x="280" y="92" text-anchor="middle">skip sport and</text>
+  <text class="sub" x="280" y="107" text-anchor="middle">local news</text>
+  <rect class="box hl" x="400" y="40" width="150" height="80" rx="8"/>
+  <text class="label" x="475" y="72" text-anchor="middle">🤖 Pick the news</text>
+  <text class="sub" x="475" y="92" text-anchor="middle">a small AI scores</text>
+  <text class="sub" x="475" y="107" text-anchor="middle">the headlines</text>
+  <rect class="box" x="595" y="40" width="155" height="80" rx="8"/>
+  <text class="label" x="672" y="72" text-anchor="middle">One web page</text>
+  <text class="sub" x="672" y="92" text-anchor="middle">published on</text>
+  <text class="sub" x="672" y="107" text-anchor="middle">Vercel</text>
+  <path class="arrow" d="M160,80 L203,80"/>
+  <path class="arrow" d="M355,80 L398,80"/>
+  <path class="arrow" d="M550,80 L593,80"/>
+</svg>
