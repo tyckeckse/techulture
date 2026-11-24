@@ -229,6 +229,27 @@ def render_page(
     .header {{ display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }}
     .repo-link {{ font-size: 0.9rem; color: var(--muted); }}
     .repo-link:hover {{ color: var(--accent); }}
+    /* Reload button next to the title; only on phones, where a page can be shown from an old snapshot. */
+    .refresh {{
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      margin-left: 8px;
+      padding: 0;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: var(--panel);
+      color: var(--accent);
+      vertical-align: middle;
+      cursor: pointer;
+    }}
+    .refresh.spin svg {{ animation: refresh-spin 0.8s linear infinite; }}
+    @keyframes refresh-spin {{ to {{ transform: rotate(360deg); }} }}
+    @media (max-width: 720px) {{
+      .refresh {{ display: inline-flex; }}
+    }}
     h1 {{ margin: 0 0 6px; font-size: 1.6rem; }}
     h2 {{ margin: 20px 0 10px; }}
     .columns {{
@@ -287,7 +308,7 @@ def render_page(
 <body>
   <main>
     <div class='header'>
-      <h1>Techulture</h1>
+      <h1>Techulture<button class="refresh" type="button" aria-label="Uppdatera" title="Uppdatera" onclick="this.classList.add('spin'); location.reload();"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><polyline points="20 4 20 9 15 9"/></svg></button></h1>
       <a class='repo-link' href='https://github.com/tyckeckse/techulture' target='_blank' rel='noopener noreferrer'>GitHub</a>
     </div>
     <p class='updated'>Senaste uppdatering: {html.escape(updated)}</p>
