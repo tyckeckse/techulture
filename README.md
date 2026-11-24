@@ -1,6 +1,6 @@
 # 🧭 Techulture
 
-**Live:** https://techulture.vercel.app · **Presentation:** [presentation/index.html](presentation/index.html)
+**Live:** https://techulture.vercel.app
 
 Nyhetsaggregat från svenska nyhets- och kultursidor, med en LLM som rangordnar nyheterna efter intressevärde.
 
