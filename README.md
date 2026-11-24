@@ -14,15 +14,15 @@ Culture stories are all shown, newest first. General news is different: there is
 
 Once an hour, a job on GitHub fetches the latest items from eleven sources, drops what is too old, lets the AI pick the news and writes one simple web page. That page is then published on Vercel. There is no database and no server: each hour the page is built again from scratch.
 
-```
-11 sources  →  keep the last day  →  AI picks the news  →  one web page on Vercel
-```
+![Eleven sources are fetched every hour, filtered, the news is picked by a small AI, and one page is published](presentation/how-it-works.svg)
 
 If a source is down, it is simply skipped for that hour. And if most sources fail at once, the old page stays up rather than being replaced by an empty one.
 
 ## A small AI that picks the news
 
 SVT and SR Ekot publish dozens of headlines a day. The AI gets the fresh ones, about ten at a time, and gives each a score from 0 to 20: low for routine updates, sport and celebrity, high for important or surprising news that many people will want to understand. Only the top five from SVT and the top four from Ekot make it onto the page.
+
+![Headlines get scores from the AI and only the highest scored are shown](presentation/picking-the-news.svg)
 
 The AI is Qwen2.5 3B, a small open model from Hugging Face. It runs right inside the hourly GitHub job, on an ordinary processor, with no API key and no cost, and it only ever sees the headline text. If it fails to start or answer, the page simply shows the newest headlines instead. Qwen2.5 3B is released under a research licence that allows non-commercial use.
 
