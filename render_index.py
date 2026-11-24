@@ -228,6 +228,8 @@ def render_page(
     main {{ max-width: 1120px; margin: 0 auto; padding: 24px 16px 36px; }}
     .header {{ display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }}
     .repo-link {{ font-size: 0.9rem; color: var(--muted); }}
+    .header {{ flex-wrap: wrap; }}
+    .header h1 {{ white-space: nowrap; }}
     .repo-link:hover {{ color: var(--accent); }}
     /* Reload button next to the title; only on phones, where a page can be shown from an old snapshot. */
     .refresh {{
@@ -270,6 +272,7 @@ def render_page(
       .columns {{ grid-template-columns: 1fr; gap: 20px; }}
       /* News first on small screens. */
       .column-nyheter {{ order: -1; }}
+      .repo-link {{ flex-basis: 100%; }}
     }}
     p {{ margin: 0 0 12px; }}
     .updated {{ color: var(--muted); margin-bottom: 18px; font-size: 0.95rem; }}
@@ -309,7 +312,7 @@ def render_page(
   <main>
     <div class='header'>
       <h1>Techulture<button class="refresh" type="button" aria-label="Uppdatera" title="Uppdatera" onclick="this.classList.add('spin'); location.reload();"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><polyline points="20 4 20 9 15 9"/></svg></button></h1>
-      <a class='repo-link' href='https://github.com/tyckeckse/techulture' target='_blank' rel='noopener noreferrer'>GitHub</a>
+      <a class='repo-link' href='https://github.com/tyckeckse/techulture' target='_blank' rel='noopener noreferrer'>github.com/tyckeckse/techulture</a>
     </div>
     <p class='updated'>Senaste uppdatering: {html.escape(updated)}</p>
     {body}

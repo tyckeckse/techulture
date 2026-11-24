@@ -7,6 +7,7 @@ on:
       - "README.md"
       - "presentation/**"
       - "tests/**"
+      - ".github/workflows/tests.yml"
   workflow_dispatch:
     inputs:
       deploy:
