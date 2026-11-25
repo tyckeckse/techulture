@@ -14,9 +14,7 @@ on:
         description: Publish the page (off for test runs)
         type: boolean
         default: true
-  schedule:
-    # Cron is UTC: hourly 05:17-22:17 Swedish winter time, 06:17-23:17 summer time.
-    - cron: "17 4-21 * * *"
+  # Scheduled externally via cron-job.org -> workflow_dispatch.
 
 # Never let an older run overwrite a newer page.
 concurrency:
