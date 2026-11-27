@@ -311,12 +311,55 @@ def test_fetch_items_resolves_urls_from_sitemap(monkeypatch) -> None:
         "type": "atom_xml",
         "start_url": "https://api.sr.se/api/rss/program/478",
         "url_lookup_sitemap": "https://www.sverigesradio.se/newssitemap",
+        "url_lookup_fallback": "https://www.sverigesradio.se/kultur",
     }
 
     items = techulture.fetch_items(source)
 
     assert items[0].url == "https://www.sverigesradio.se/artikel/gasometer-invigs"
-    assert items[1].url == "https://www.sverigesradio.se/artikel/9999999"
+    # The feed's own link is broken, so an item missing from the sitemap gets the program page.
+    assert items[1].url == "https://www.sverigesradio.se/kultur"
+
+
+def test_fetch_items_retries_sitemap_before_falling_back(monkeypatch) -> None:
+    atom_xml = """<feed xmlns="http://www.w3.org/2005/Atom">
+      <entry>
+        <title>Kulturnyhet</title>
+        <link href="https://www.sverigesradio.se/artikel/9348176" />
+        <published>2026-11-23T15:00:00+01:00</published>
+      </entry>
+    </feed>"""
+    sitemap_xml = """<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+      <url>
+        <loc>https://www.sverigesradio.se/artikel/kulturnyhet</loc>
+        <news:news><news:title>Kulturnyhet</news:title></news:news>
+      </url>
+    </urlset>"""
+    sitemap_calls = []
+
+    def fake_fetch(url: str, encoding=None) -> str:
+        if url == "https://www.sverigesradio.se/newssitemap":
+            sitemap_calls.append(url)
+            if len(sitemap_calls) == 1:
+                raise techulture.requests.Timeout("slow")
+            return sitemap_xml
+        return atom_xml
+
+    monkeypatch.setattr(techulture, "fetch_text", fake_fetch)
+    source = {
+        "source_id": "sr_kulturnytt_atom",
+        "title": "SR Kulturnytt",
+        "type": "atom_xml",
+        "start_url": "https://api.sr.se/api/rss/program/478",
+        "url_lookup_sitemap": "https://www.sverigesradio.se/newssitemap",
+        "url_lookup_fallback": "https://www.sverigesradio.se/kultur",
+    }
+
+    items = techulture.fetch_items(source)
+
+    assert len(sitemap_calls) == 2
+    assert [item.url for item in items] == ["https://www.sverigesradio.se/artikel/kulturnyhet"]
 
 
 def test_fetch_items_links_to_program_page_when_sitemap_fails(monkeypatch) -> None:

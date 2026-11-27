@@ -27,6 +27,7 @@ DEFAULT_SECTION = "kultur"
 SCORE_MAX = 20
 SCORE_BATCH_SIZE = 10
 LLM_CANDIDATE_LIMIT = 40
+SITEMAP_ATTEMPTS = 3
 
 
 @dataclass
@@ -283,8 +284,9 @@ def fetch_atom_xml(source: dict[str, Any]) -> list[Item]:
     return items
 
 
-def resolve_urls_from_sitemap(items: list[Item], sitemap_url: str) -> list[Item]:
+def resolve_urls_from_sitemap(items: list[Item], sitemap_url: str, fallback_url: str | None = None) -> list[Item]:
     # Some feeds (e.g. SR Kulturnytt Atom) emit broken numeric article IDs; look up canonical URLs by title.
+    # Items not found in the sitemap get the fallback link, since their own link is broken.
     root = ET.fromstring(fetch_text(sitemap_url))
     url_by_title: dict[str, str] = {}
 
@@ -297,6 +299,8 @@ def resolve_urls_from_sitemap(items: list[Item], sitemap_url: str) -> list[Item]
     for item in items:
         if item.title in url_by_title:
             item.url = url_by_title[item.title]
+        elif fallback_url:
+            item.url = fallback_url
 
     return items
 
@@ -362,16 +366,21 @@ def fetch_items(source: dict[str, Any]) -> list[Item]:
     items = exclude_by_url(items, source.get("exclude_url_parts", []))
     sitemap_url = source.get("url_lookup_sitemap")
     if sitemap_url:
-        try:
-            items = resolve_urls_from_sitemap(items, sitemap_url)
-        except (requests.RequestException, ET.ParseError) as error:
-            fallback_url = source.get("url_lookup_fallback")
-            if not fallback_url:
-                raise
-            # The feed's own article links are unreliable, so link to the program page instead.
-            print(f"{source['source_id']}: url lookup failed, using fallback link: {error}", file=sys.stderr)
-            for item in items:
-                item.url = fallback_url
+        fallback_url = source.get("url_lookup_fallback")
+        for attempt in range(1, SITEMAP_ATTEMPTS + 1):
+            try:
+                items = resolve_urls_from_sitemap(items, sitemap_url, fallback_url)
+                break
+            except (requests.RequestException, ET.ParseError) as error:
+                if attempt < SITEMAP_ATTEMPTS:
+                    print(f"{source['source_id']}: url lookup failed, retrying: {error}", file=sys.stderr)
+                    continue
+                if not fallback_url:
+                    raise
+                # The feed's own article links are broken, so link to the program page instead.
+                print(f"{source['source_id']}: url lookup failed, using fallback link: {error}", file=sys.stderr)
+                for item in items:
+                    item.url = fallback_url
     for item in items:
         item.section = source.get("section", DEFAULT_SECTION)
 
